@@ -1,0 +1,530 @@
+{% extends 'base.html'%}
+{%load static%}
+{%block form-xu-ly-kho%}
+
+<div class="content-wrapper">
+
+ <section style="padding:100px">
+
+
+        <h1>NHẬP KHO </h1><br><br>
+        <form method="post" id="indexForm" data-courses-url="{% url 'ajax_load_courses' %}">
+            {% csrf_token %}
+            <div class="row">
+
+                <div class="col col-4">
+
+                    <h6>
+                        Nhân Viên Kinh Doanh
+                        <input type="text" value="{{phieunhaphang.nhanvien}}" disabled class="form-control">
+                    </h6>
+
+                    <h6>
+                        Điện Thoại Liên Hệ
+                        <input class="form-control " value="{{nhanvien.sdt}}" readonly name="sdt" type="text"  >
+
+                    </h6>
+
+                    <h6>Code:
+                        <input class="btn btn-default form-control " value="{{phieunhaphang.code}}" readonly name="code" type="text" >
+                    </h6>
+                </div>
+                <div class="col col-5">
+                    <h6>Nhà cung cấp :
+                         <input type="text" value="{{phieunhaphang.nhacungcap}}" disabled class="form-control">
+
+                    </select></h6>
+                    <h6>Thời Gian Đặt:<input type="text" name="thoigiantao" value="{{phieunhaphang.thoigiantao}}" readonly class="form-control"></h6>
+                    <h6>Thời Gian Dự Kiến Giao:<input type="text" name="thoigiantao" value="{{phieunhaphang.thoigiannhanhang}}" readonly class="form-control">
+                    </h6>
+                </div>
+                <div class="col col-3">
+
+                    <h6>Người Làm Phiếu
+                        <input type="text" name="username" value="{{phieunhaphang.username}}" readonly class="form-control">
+
+                    </h6>
+                    <h6>Phản Hồi Kế Toán:
+                        <textarea name="ghichu" id="inputPhanhoi" class="form-control" rows="1"readonly>{{phieunhaphang.phahoi}}</textarea>
+
+                    </h6>
+                    <h6>Ghi chú Kinh Doanh:
+
+                    	<textarea name="ghichu" id="inputGhichu" class="form-control" rows="1" readonly>{{phieunhaphang.ghichu}}</textarea>
+
+                    </h6>
+                </div>
+                {{form}}
+                 <table class="table table-bordered">
+                    <thead>
+
+                    <tr>
+                        <th class="col-md-1">STT</th>
+                        <th class="col-md-2">Hãng</th>
+                        <th class="col-md-2" >Hàng Hoá</th>
+                        <th class="col-md-2" >Số Lượng</th>
+                        <th class="col-md-3">Kho Nhập</th>
+                        <th class="col-md-2">Số Lượng Tồn Kho </th>
+                        
+                    </tr>
+
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><br>1</td>
+                        <td>
+                            <br>
+                            <textarea name="hangsx_1" id="hangsx_1" cols="8" rows="2" disabled value="{{phieunhaphang.noidung.id_hangsx1}}">{{phieunhaphang.noidung.ten_hangsx1}}</textarea>
+                           
+                        </td>
+                        <td><br>
+                            <textarea name="hang_1" id="hang_1" cols="25" rows="2" disabled value="{{phieunhaphang.noidung.hang_1}}">{{phieunhaphang.noidung.tenhang_1}}  - Số Lượng Đặt : {{phieunhaphang.noidung.soluong_1}}</textarea>
+                           
+                         </td>
+                        <td > 
+                            <div >
+                            <input  type="number" name="soluong1" id="soluong1" class="form-control "   value="{{phieunhaphang.noidung.soluong_1}}" required="required"
+                                   pattern="" title="" max="{{phieunhaphang.noidung.soluong_1}}" min="0">
+                            <br>
+                            
+                           
+                            <input  type="number" name="soluong1_2" id="soluong1_2" class="form-control" value="0" required="required"
+                                   pattern="" title="" max="{{phieunhaphang.noidung.soluong_1}}" min="0">
+                            </div>
+
+                            <script>
+
+                                    $("#soluong1").change(function(){
+                                    
+                                    var max =  parseInt($(this).attr('max'));
+                                    var min =  parseInt($(this).attr('min'));    
+                                    sl2 = max - sl1;
+
+                                    if($('#soluong1').val() > max)
+                                    {
+                                        $('#soluong1').val(max)
+                                        var sl1 =  parseInt($('#soluong1').val());
+                                        alert("Giá Trị Không Lớn Hơn số Lượng Đặt : "+ max)
+                                        $("#soluong1_2").val(sl2);
+                                    }
+                                    else{
+                                        var sl1 =  parseInt($('#soluong1').val());
+                                        sl2 =  max - sl1;
+                                        $("#soluong1_2").val(sl2);
+                                    }
+                                    var sl1 =  parseInt($('#soluong1').val());
+                                        sl2 =  max - sl1;
+                                        $("#soluong1_2").val(sl2);
+                                    
+
+
+                                    });
+                                    $("#soluong1_2").change(function(){
+                                        var sl1 = $("#soluong1").val(); 
+                                        var sl2 = $("#soluong1_2").val();
+                                        var tong = parseInt(sl1) + parseInt(sl2);
+                                        var max = parseInt($(this).attr('max'));
+                                        var sl3 = max - tong
+                                        var x = max-sl1
+                                        var time = "30-12-2021";
+                                        if(tong>max){
+                                            $("#soluong1_2").val(x);
+                                            alert("Số Lượng nhập nhiều hơn số lượng đặt")
+                                        }
+                                        if(tong<max){
+                                            var name1 = prompt('Số Lượng Chưa Giao',sl3);
+                                            var name2 = prompt('Thời Gian Hẹn Giao ',time);
+                                          if (name1 != null && name1 != "") {
+                                           alert("Số Lượng :"+ name1 +"_sẽ hẹn giao ngày :"+name2);  
+                                        }   
+                                        
+                                               }
+                                    });
+                                    
+                            </script>
+                         </td>
+                        <td >
+                             <select name="kho1" id="kho1"  class="form-control" >
+                                <option style="color: darkblue;" required="required"> <p style="color: darkblue;">Chọn Kho Nhận</p>  </option>
+                                {% for item in kho %}
+                                 <option  value="{{item.id}}">{{item.tenkho}}</option>
+                                 {% endfor %}
+                            </select>
+                            <br>
+                            <select name="kho1_2" id="kho1_2" class="form-control" required="required" >
+                                <option style="color: darkblue;">Chọn Kho Nhận</option>
+                                {% for item in kho %}
+                                 <option  value="{{item.id}}">{{item.tenkho}}</option>
+                                 {% endfor %}
+                            </select>
+
+                            <script>
+                                $("#kho1_2").change(function(){
+                                    var kho1 = parseInt($("#kho1").val());
+                                    var kho2 = parseInt($("#kho1_2").val());
+                                    var text_kho1 = $("#kho1 option:selected").text();
+                                    
+                                    if(kho1!=kho2){
+
+                                    }else
+                                    {
+                                        alert("Bạn đã chọn : _" + text_kho1  + "_ Rồi Xin Chọn Lại" );
+                                        $("#kho1_2").val(NaN);
+                                    }
+
+                                    
+                                });
+                                $("#kho1").change(function(){
+                                    var kho1 = parseInt($("#kho1").val());
+                                    var kho2 = parseInt($("#kho1_2").val());
+                                    var text_kho2 = $("#kho1_2 option:selected").text();
+                                    if(kho1 != kho2){}
+                                    else{
+                                        alert("Bạn đã chọn : _" + text_kho2 + "_ Rồi Xin Chọn Lại" );
+                                        $("#kho1").val(null);
+                                    }
+
+                                    
+                                });
+                            </script>
+                        </td>
+                        <td style="padding: 10px;">
+                            {% if tonkho_h1 %}
+
+                            {{tonkho_h1}}
+
+                            {%else%}
+                            {%for item in kho %}
+                            <li style="color: brown;">{{ item.tenkho}} : 0</li>
+                            <br>
+                            {%endfor %}
+                            {%endif%}
+
+                        </td>
+
+                    </tr>
+                    {%if phieunhaphang.noidung.tenhang_2%}
+                    <tr>
+                        <td> <br> 2</td>
+                        <td>  <br>
+                            <textarea name="hangsx_2" id="hangsx_2" cols="5" rows="1" disabled value="{{phieunhaphang.noidung.id_hangsx2}}">{{phieunhaphang.noidung.ten_hangsx2}}</textarea>
+                           
+                        </td>
+                        <td> <br>
+                            <textarea name="hang_2" id="hang_2" cols="25" rows="1" disabled value="{{phieunhaphang.noidung.hang_2}}">{{phieunhaphang.noidung.tenhang_2}} </textarea>   
+                        </td>
+                       <td><input  type="number" name="soluong2" id="soluong2" class="form-control" value="{{phieunhaphang.noidung.soluong_2}}" required="required"
+                                   pattern="" title="" max="{{phieunhaphang.noidung.soluong_2}}" min="0">
+                            <br>
+                            <input  type="number" name="soluong2_2" id="soluong2_2" class="form-control" value="{{phieunhaphang.noidung.soluong_2}}" required="required"
+                                   pattern="" title="" max="{{phieunhaphang.noidung.soluong_2}}" min="0">
+                        <td>
+                            <select name="kho2" id="kho2" class="form-control"  >
+                                {% for item in kho %}
+                                 <option  value="{{item.id}}">{{item.tenkho}}</option>
+                                 {% endfor %}
+                            </select>
+                            <br>
+                           <select name="kho2_2" id="kho2_2" class="form-control"  >
+                                {% for item in kho %}
+                                 <option  value="{{item.id}}">{{item.tenkho}}</option>
+                                 {% endfor %}
+                            </select>
+                        </td>
+                        <td >
+                            {% if tonkho_h2 %}
+                            {% for item in tonkho_h2 %}
+                            <li>{{item.kho}} : {{item.soluongnhap}} </li>
+                            {% endfor %}
+
+                            {%else%}
+                            {%for item in kho %}
+                            <li>{{ item.tenkho}} :0</li>
+                            {%endfor %}
+                            {%endif%}
+                        </td>
+                       
+                    </tr>
+                    {%if phieunhaphang.noidung.tenhang_3%}
+                    <tr>
+                        <td> <br> 3</td>
+                        <td>  <br>
+                            <textarea name="hangsx_3" id="hangsx_3" cols="5" rows="1" disabled value="{{phieunhaphang.noidung.id_hangsx3}}">{{phieunhaphang.noidung.ten_hangsx3}}</textarea>
+                           
+                        </td>
+                        <td><br>
+                            <textarea name="hang_3" id="hang_3" cols="25" rows="1" disabled value="{{phieunhaphang.noidung.hang_3}}">{{phieunhaphang.noidung.tenhang_3}} </textarea>
+                           
+                        </td>
+                       <td><input  type="number" name="soluong3" id="soluong3" class="form-control" value="{{phieunhaphang.noidung.soluong_3}}" required="required"
+                                   pattern="" title="" max="{{phieunhaphang.noidung.soluong_3}}" min="0">
+                            <br>
+                            <input  type="number" name="soluong3_2" id="soluong3_2" class="form-control" value="{{phieunhaphang.noidung.soluong_2}}" required="required"
+                                   pattern="" title="" max="{{phieunhaphang.noidung.soluong_3}}" min="0">
+                        <td>
+                            <select name="kho3" id="kho3" class="form-control"  >
+                                {% for item in kho %}
+                                 <option  value="{{item.id}}">{{item.tenkho}}</option>
+                                 {% endfor %}
+                            </select>
+                            <br>
+                           <select name="kho3_2" id="kho3_2" class="form-control"  >
+                                {% for item in kho %}
+                                 <option  value="{{item.id}}">{{item.tenkho}}</option>
+                                 {% endfor %}
+                            </select>
+                        </td>
+                        <td >
+                            {% if tonkho_h3 %}
+                            {% for item in tonkho_h3 %}
+                            <li>{{item.kho}} : {{item.soluongnhap}} </li>
+                            {% endfor %}
+
+                            {%else%}
+                            {%for item in kho %}
+                            <li>{{ item.tenkho}} :0</li>
+                            {%endfor %}
+                            {%endif%}
+                        </td>
+                       
+                    </tr>
+                    {%if phieunhaphang.noidung.tenhang_4%}
+                    <tr>
+                        <td> <br>4</td>
+                        <td>
+                            <br>
+                            <textarea name="hangsx_4" id="hangsx_4" cols="5" rows="1" disabled value="{{phieunhaphang.noidung.id_hangsx4}}">{{phieunhaphang.noidung.ten_hangsx4}}</textarea>
+                           
+                        </td>
+                        <td><br>
+                            <textarea name="hang_4" id="hang_4" cols="25" rows="1" disabled value="{{phieunhaphang.noidung.hang_4}}">{{phieunhaphang.noidung.tenhang_4}} </textarea>
+                           
+                        </td>
+                        <td>
+                            <input  type="number" name="soluong4" id="soluong4" class="form-control" value="{{phieunhaphang.noidung.soluong_3}}" required="required"
+                                   pattern="" title="" max="{{phieunhaphang.noidung.soluong_4}}" min="0">
+                            <br>
+                            <input  type="number" name="soluong4_2" id="soluong4_2" class="form-control" value="{{phieunhaphang.noidung.soluong_2}}" required="required"
+                                   pattern="" title="" max="{{phieunhaphang.noidung.soluong_4}}" min="0">
+                         
+                        <td>
+                            <select name="kho4" id="kho4" class="form-control"  >
+                                {% for item in kho %}
+                                 <option  value="{{item.id}}">{{item.tenkho}}</option>
+                                 {% endfor %}
+                            </select>    
+                            <br>
+                            <select name="kho4_2" id="kho4_2" class="form-control"  >
+                                {% for item in kho %}
+                                 <option  value="{{item.id}}">{{item.tenkho}}</option>
+                                 {% endfor %}
+                            </select>    
+                        </td>
+                        <td >
+                            {% if tonkho_h4 %}
+                            {% for item in tonkho_h4 %}
+                            <li>{{item.kho}} : {{item.soluongnhap}} </li>
+                            {% endfor %}
+
+                            {% else %}
+                            {%for item in kho %}
+                            <li>{{ item.tenkho}} : 0</li>
+                            {%endfor %}
+                            {%endif%}
+
+                        </td>
+                      
+                    </tr>
+                    {%endif%}
+                    {%endif%}
+                    {%endif%}
+
+                    
+                    </tbody>
+                    
+                </table>
+                
+                
+                    <select class="form-control" name="xulykho" id="xulykho" style="color: brown;">
+                        <option value="1" selected>Chấp Nhận Đơn</option>
+                        <option value="2">Hủy Đơn</option>
+
+                    </select>
+                    <div style="padding: 200px;"> <table>
+                        <tr></tr>
+                    </table></div>
+                <br>
+            <div style="float: right;">
+                <button type="submit" class="btn btn-info">Hoàn Thành</button>
+            </div>
+                
+
+            </div>
+
+
+
+
+
+        </form>
+    </section>
+
+
+</div>
+
+<script>
+	function formatNumber(nStr, decSeperate, groupSeperate) {
+            nStr += '';
+            x = nStr.split(decSeperate);
+            x1 = x[0];
+            x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + groupSeperate + '$2');
+            }
+            return x1 + x2;
+        }
+
+  $(function() {
+
+
+
+    $('#soluong1').keyup(function() {
+        updateTotal();
+    });
+
+    $('#dongia1').keyup(function() {
+        updateTotal();
+    });
+    $('#soluong2').keyup(function() {
+        updateTotal();
+    });
+    $('#dongia2').keyup(function() {
+        updateTotal();
+    });
+    $('#soluong3').keyup(function() {
+        updateTotal();
+    });
+    $('#dongia3').keyup(function() {
+        updateTotal();
+    });
+     $('#soluong4').keyup(function() {
+        updateTotal();
+    });
+    $('#dongia4').keyup(function() {
+        updateTotal();
+    });
+    var updateTotal = function () {
+
+      var input1 = parseInt($('#soluong1').val());
+      var input2 = parseInt($('#dongia1').val());
+      var input11 = parseInt($('#soluong2').val());
+      var input22 = parseInt($('#dongia2').val());
+      var input113 = parseInt($('#soluong3').val());
+      var input223 = parseInt($('#dongia3').val());
+      var input114 = parseInt($('#soluong4').val());
+      var input224 = parseInt($('#dongia4').val());
+
+      var thanhtien1 = input1 * input2;
+      var thanhtien2 = input11 * input22;
+      var thanhtien3 = input113 * input223;
+      var thanhtien4 = input114 * input224;
+
+      $("input[type=text][name=thanhtien1]" ).val(formatNumber(thanhtien1, '.', ','));
+      $("input[type=text][name=thanhtien2]" ).val(formatNumber(thanhtien2, '.', ','));
+      $("input[type=text][name=thanhtien3]" ).val(formatNumber(thanhtien3, '.', ','));
+      $("input[type=text][name=thanhtien4]" ).val(formatNumber(thanhtien4, '.', ','));
+
+
+    };
+
+
+ 	});
+
+
+
+    $("#programming").change(function () {
+      var url = $("#indexForm").attr("data-courses-url");  // get the url of the `load_courses` view
+      var programmingId = $(this).val();  // get the selected programming ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/load-courses/)
+        data: {
+          'programming': programmingId       // add the programming id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_courses` view function
+          $("#courses").html(data);  // replace the contents of the course input with the data that came from the server
+        }
+      });
+
+    });
+
+$("#programming2").change(function () {
+      var url = $("#indexForm").attr("data-courses-url");  // get the url of the `load_courses` view
+      var programmingId = $(this).val();  // get the selected programming ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/load-courses/)
+        data: {
+          'programming2': programmingId       // add the programming id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_courses` view function
+          $("#courses2").html(data);  // replace the contents of the course input with the data that came from the server
+        }
+      });
+
+    });
+
+$("#programming3").change(function () {
+      var url = $("#indexForm").attr("data-courses-url");  // get the url of the `load_courses` view
+      var programmingId = $(this).val();  // get the selected programming ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/load-courses/)
+        data: {
+          'programming3': programmingId       // add the programming id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_courses` view function
+          $("#courses3").html(data);  // replace the contents of the course input with the data that came from the server
+        }
+      });
+
+    });
+
+
+$("#programming4").change(function () {
+      var url = $("#indexForm").attr("data-courses-url");  // get the url of the `load_courses` view
+      var programmingId = $(this).val();  // get the selected programming ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/load-courses/)
+        data: {
+          'programming4': programmingId       // add the programming id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_courses` view function
+          $("#courses4").html(data);  // replace the contents of the course input with the data that came from the server
+        }
+      });
+
+    });
+
+$("#nhanvien").change(function () {
+      var url = $("#indexForm").attr("data-courses-url");  // get the url of the `load_courses` view
+      var nhanvien_id = $(this).val();  // get the selected programming ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/load-courses/)
+        data: {
+          'nhanvien_id': nhanvien_id       // add the programming id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_courses` view function
+          $("#sdt").html(data);  // replace the contents of the course input with the data that came from the server
+        }
+      });
+
+    });
+
+</script>
+
+
+
+{%endblock%}
